@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -11,18 +11,18 @@ import { useRouter } from "expo-router";
 import styles from "./welcome.style";
 import { icons, SIZES } from "../../../constants";
 
-const jobTypes = ["Full-time", "Part-time", "Contractor"]
-
-
+const jobTypes = ["Full-time", "Part-time", "Contractor"];
 
 const Welcome = () => {
   const router = useRouter();
+  const [activeJobType, setActiveJobType] = useState("Full-time")
   return (
     <View>
       <View style={styles.container}>
         <Text style={styles.userName}>Hello Adrian</Text>
         <Text style={styles.welcomeMessage}>Find your Perfect Jobs!</Text>
       </View>
+
       <View style={styles.searchContainer}>
         <View style={styles.searchWrapper}>
           <TextInput
@@ -32,7 +32,7 @@ const Welcome = () => {
             placeholder="What are you looking for?"
           />
         </View>
-        <TouchableOpacity style={styles.searchBtn} onPress={()=>{}}>
+        <TouchableOpacity style={styles.searchBtn} onPress={() => {}}>
           <Image
             source={icons.search}
             resizeMode="contain"
@@ -40,14 +40,24 @@ const Welcome = () => {
           />
         </TouchableOpacity>
       </View>
+
       <View style={styles.tabsContainer}>
-        <FlatList 
+        <FlatList
           data={jobTypes}
-          renderItem={({job})=> (
-            <TouchableOpacity>
-              <Text>{job}</Text>
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.tab(activeJobType, item)}
+              onPress={() => {
+                setActiveJobType(item);
+                router.push(`/search/${item}`);
+              }}
+            >
+              <Text style={styles.tabText(activeJobType, item)}>{item}</Text>
             </TouchableOpacity>
           )}
+          keyExtractor={(item) => item}
+          contentContainerStyle={{ columnGap: SIZES.small }}
+          horizontal
         />
       </View>
     </View>
